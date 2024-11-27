@@ -31,20 +31,19 @@ def play_turn():
         print("No matching dice, no reroll. Final score for this turn.")
         return sum(your_roll) 
     
-    continue_reroll = 'y'
-    if len(fixed_dice) < 3: 
-        while continue_reroll.lower() == 'y' and len(fixed_dice) < 3: 
-            print(f"Fixed dice so far: {fixed_dice}")
-            continue_reroll = input("Do you want to reroll the remaining die(s) for a better score? (y/n): ")
+    continue_reroll = input("Do you want to reroll the remaining die(s) for a better score? (y/n): ").strip().lower()
+    while continue_reroll.lower() not in ['y', 'n']:
+        print("Invalid input. Please enter 'y' to continue or 'n' to stop.")
+        continue_reroll = input("Do you want to reroll the remaining die(s) for a better score? (y/n): ").strip().lower()
 
-            if continue_reroll.lower() == 'y':
-                remaining_dice = 3 - len(fixed_dice) 
-                for _ in range(remaining_dice):
-                    fixed_dice.append(random.choice([1, 2, 3, 4, 5, 6]))
-                    print(f"New roll: {fixed_dice}")
-            elif continue_reroll.lower() == 'n':
-                break 
-        return sum(fixed_dice)
+        if continue_reroll.lower() == 'y': 
+            remaining_dice = 3 - len(fixed_dice)
+            for _ in range(remaining_dice): 
+                fixed_dice.append(random.choice([1, 2, 3, 4, 5, 6]))
+                print(f"New roll: {fixed_dice}")
+            print(f"Final fixed dice: {fixed_dice}")
+        
+        return sum(fixed_dice) if fixed_dice else 0 
  
 def play_game(target_score=100):
     total_score = 0 
