@@ -1,4 +1,5 @@
 import random
+import sys
 
 def play_turn():
     dice_amount = 3
