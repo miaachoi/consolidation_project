@@ -6,7 +6,7 @@ def play_turn():
     print(f"Initial roll: {your_roll}")
 
     # Check if all three dice are the same (tuple out) 
-    if (your_roll[0] == your_roll[1]) and (your_roll[1] == your_roll[2]):
+    if your_roll[0] == your_roll[1] and your_roll[1] == your_roll[2]:
         print("You tupled out! Your turn ends with 0 points.")
         return 0
     
@@ -16,18 +16,23 @@ def play_turn():
     # Check if two dice are the same, then fix them
     if your_roll[0] == your_roll[1]:
         fixed_dice = [your_roll[0], your_roll[1]]
-    if your_roll[1] == your_roll[2] and your_roll[0] != your_roll[1]:
+        third_die = random.choice([1, 2, 3, 4, 5, 6])
+        fixed_dice.append(third_die)
+    elif your_roll[1] == your_roll[2]:
         fixed_dice = [your_roll[1], your_roll[2]]
-    if your_roll[0] == your_roll[2] and your_roll[0] != your_roll[1]:
+        third_die = random.choice([1, 2, 3, 4, 5, 6])
+        fixed_dice.insert(0, third_die) 
+    elif your_roll[0] == your_roll[2]:
         fixed_dice = [your_roll[0], your_roll[2]]
-
-    # If two dice are fixed, reroll the third die 
-    if not fixed_dice: 
-        fixed_dice = your_roll # Keep all the dice if no duples are found
+        third_die = random.choice([1, 2, 3, 4, 5, 6])
+        fixed_dice.insert(1, third_die)
+    else:
+        print("No matching dice, all dice are rerolled.")
+        fixed_dice = your_roll
 
     print(f"Fixed dice: {fixed_dice}")
     return sum(fixed_dice)
-
+ 
 def play_game():
     total_score = 0 
 
