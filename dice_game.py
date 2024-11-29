@@ -4,13 +4,13 @@ import sys
 def play_turn():
     """
     Stimulates a player's turn in the dice game.
-
-    Rolls three dice, checks for any duples, and allows the player to reroll unmatched dice for a better score. Returns the total score for the turn.
+    Rolls three dice, checks for any duples, and allows the player to reroll unmatched dice for a better score. 
+    Returns the total score for the turn.
 
     """
     dice_amount = 3
     your_roll = random.choices([1, 2, 3, 4, 5, 6], k=dice_amount)
-    print(f"Initial roll: {your_roll}")
+    print(f"Your roll: {your_roll}")
 
     # Check if all three dice are the same (tuple out) 
     if your_roll[0] == your_roll[1] and your_roll[1] == your_roll[2]:
@@ -34,22 +34,25 @@ def play_turn():
         print("No matching dice, no reroll. Final score for this turn.")
         return sum(your_roll) 
     
-    continue_reroll = input("Do you want to reroll the remaining die(s) for a better score? (y/n): ").strip().lower() 
-    while continue_reroll not in ['y', 'n']:
-        print("Invalid input. Please enter 'y' to continue or 'n' to stop.")
-        continue_reroll = input("Do you want to reroll the remaining die(s) for a better score? (y/n): ").strip().lower() 
+    reroll = input("Do you want to reroll the remaining die(s)? (y/n): ").strip().lower() 
+    while reroll not in ['y', 'n']:
+        print("Invalid input. Please enter 'y' or 'n':")
+        reroll = input().strip().lower()
 
-    if continue_reroll == 'y' and len(fixed_dice) < 3: 
+    if reroll == 'y' and len(fixed_dice) < 3: 
         remaining_dice = 3 - len(fixed_dice)
         for _ in range(remaining_dice): 
             fixed_dice.append(random.choice([1, 2, 3, 4, 5, 6]))
         print(f"New roll: {fixed_dice}")
-    elif continue_reroll == 'n': 
+    elif reroll == 'n':
         print(f"Final score for this turn: {sum(fixed_dice)}")
 
     return sum(fixed_dice)
 
 def play_game(target_score=100):
+    """
+    Plays the dice game, where a player takes turns rolling dice. The game ends when the player's score reaches the target score.
+    """
     total_score = 0 
 
     while total_score < target_score: 
