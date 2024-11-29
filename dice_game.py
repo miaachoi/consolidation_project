@@ -5,8 +5,8 @@ def play_turn():
     """
     Stimulates a player's turn in the dice game.
     Rolls three dice, checks for any duples, and allows the player to reroll unmatched dice for a better score. 
-    Returns the total score for the turn.
-
+    If the player "tupled out" (three of the same number), their score for the turn is 0.
+    Returns the total score for the return.
     """
     dice_amount = 3 # Number of dice rolled per turn 
     your_roll = random.choices([1, 2, 3, 4, 5, 6], k=dice_amount) # Roll three dice 
@@ -15,9 +15,9 @@ def play_turn():
     # Check if all three dice are the same (tuple out) 
     if your_roll[0] == your_roll[1] and your_roll[1] == your_roll[2]:
         print("You tupled out! Your turn ends with 0 points.")
-        return 0 # No re-rolling, return score of 0 for this turn 
+        return 0 # If all dice match, return 0 points for the turn 
     
-    # Initialize fixed dice list to keep track of dice that won't be rerolled 
+    # Initialize fixed dice list to store dice that won't be rerolled 
     fixed_dice = []
 
     # Check if two dice are the same, then keep them fixed
@@ -33,21 +33,24 @@ def play_turn():
     else:
         print("No matching dice, no reroll. Final score for this turn.")
         return sum(your_roll) # No reroll if no matching dice, return the sum of the initial roll 
+    
     # Ask the player if they want to reroll the remaining die(s)
     reroll = input("Do you want to reroll the remaining die(s)? (y/n): ").strip().lower() 
     while reroll not in ['y', 'n']: # Ensure input is valid 
         print("Invalid input. Please enter 'y' or 'n':")
         reroll = input().strip().lower()
+
     # If player chooses to reroll, reroll the remaining dice 
     if reroll == 'y' and len(fixed_dice) < 3: 
         remaining_dice = 3 - len(fixed_dice) # Calculate how many dice need to be rerolled
         for _ in range(remaining_dice): # Reroll remaining dice
             fixed_dice.append(random.choice([1, 2, 3, 4, 5, 6]))
         print(f"New roll: {fixed_dice}") # Display new dice roll 
+   
     elif reroll == 'n':
-        print(f"Final score for this turn: {sum(fixed_dice)}") # If no reroll, show the final score for the turn 
-
-    return sum(fixed_dice) # Return the total score for the turn 
+        # If no reroll, keep the fixed dice and return the sum of those dice 
+        print(f"Final score for this turn: {sum(fixed_dice)}") # Show the final score for the turn 
+        return sum(fixed_dice) # Return the sum of the fixed dice only, no additional dice added here
 
 def play_game(target_score=100):
     """
@@ -64,9 +67,10 @@ def play_game(target_score=100):
         except Exception as e: # Handle any errors that may occur during the turn 
             print(f"An unexpected error occurred during the turn: {e}")
             break
-        if total_score >= target_score:
+        if total_score >= target_score: # Check if player has reached or exceeded the target score
             print("Congratulations, you won!")
-            break 
+            break # End the game if the player has won 
+
 # Set default target score to 100
 target_score = 100 
 
@@ -77,4 +81,6 @@ if len(sys.argv) > 1:
         print(f"Custom target score set to: {target_score}")
     except ValueError:
         print("Invalid target score provided. Using default of 100.")
+print(f"Target score: {target_score}")
+
 play_game(target_score) # Start game with the target score 
