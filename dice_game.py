@@ -2,6 +2,12 @@ import random
 import sys
 
 def play_turn():
+    """
+    Stimulates a player's turn in the dice game.
+
+    Rolls three dice, checks for any duples, and allows the player to reroll unmatched dice for a better score. Returns the total score for the turn.
+
+    """
     dice_amount = 3
     your_roll = random.choices([1, 2, 3, 4, 5, 6], k=dice_amount)
     print(f"Initial roll: {your_roll}")
@@ -17,16 +23,13 @@ def play_turn():
     # Check if two dice are the same, then fix them
     if your_roll[0] == your_roll[1]:
         fixed_dice = [your_roll[0], your_roll[1]]
-        third_die = random.choice([1, 2, 3, 4, 5, 6])
-        fixed_dice.append(third_die)
+        fixed_dice.append(random.choice([1, 2, 3, 4, 5, 6]))
     elif your_roll[1] == your_roll[2]:
         fixed_dice = [your_roll[1], your_roll[2]]
-        third_die = random.choice([1, 2, 3, 4, 5, 6])
-        fixed_dice.insert(0, third_die)
+        fixed_dice.insert(0, random.choice([1, 2, 3, 4, 5, 6]))
     elif your_roll[0] == your_roll[2]:
         fixed_dice = [your_roll[0], your_roll[2]]
-        third_die = random.choice([1, 2, 3, 4, 5, 6])
-        fixed_dice.insert(1, third_die) 
+        fixed_dice.insert(1, random.choice([1, 2, 3, 4, 5, 6])) 
     else:
         print("No matching dice, no reroll. Final score for this turn.")
         return sum(your_roll) 
