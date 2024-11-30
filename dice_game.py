@@ -43,3 +43,19 @@ while not winner:
             if len(set(dice)) == 1: 
                 print(f"{player} 'tupled out'! Turn ends with 0 points.")
                 break
+            # Identify unfixed dice 
+            unfixed_dice = [die for die in dice if die not in fixed]
+            if not unfixed_dice: # No unfixed dice left to reroll
+                print(f"{player} decides to stop. Total points: {sum(dice)}")
+                players[player] += sum(dice) # Add score 
+                break 
+
+            reroll = input(f"Do you want to reroll unfixed dice ({unfixed_dice})? (y/n): ").lower() 
+            
+            if reroll == 'y': # Player wants to reroll
+                # Roll only the unfixed dice 
+                new_roll = roll_dice(len(unfixed_dice))
+                # Combine the fixed dice and new roll 
+                dice = list(fixed) + new_roll
+                print(f"New roll: {new_roll}")
+
