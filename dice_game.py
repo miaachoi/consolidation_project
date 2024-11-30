@@ -58,4 +58,18 @@ while not winner:
                 # Combine the fixed dice and new roll 
                 dice = list(fixed) + new_roll
                 print(f"New roll: {new_roll}")
+        
+                for die in set(dice):
+                    if dice.count(die) >=2 and die not in fixed: 
+                        fixed.add(die)
+            else: 
+                print(f"{player} decides to stop. Total points: {sum(dice)}")
+                players[player] += sum(dice) 
+                break 
+    
+        if players[player] >= target_score: 
+            winner = player
+            break 
+    display_scores(players)
+print(f"\nCongratulations, {winner}! You won with {players[winner]} points!")
 
