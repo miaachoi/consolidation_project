@@ -23,3 +23,23 @@ target_score = int(input("Enter the target score to win: "))
 for i in range(1, num_players + 1):
     name = input(f"Enter Player {i}'s name: ")
     players[name] = 0
+
+winner = None 
+
+while not winner: 
+    for player in players: 
+        print(f"\n{player}'s turn!")
+        dice = roll_dice()
+        fixed = set() 
+
+        for die in set(dice):
+            if dice.count(die) >= 2:
+                fixed.add(die) 
+
+        while True: 
+            print(f"Rolled dice: {dice}")
+            print(f"Fixed dice: {list(fixed)}")
+
+            if len(set(dice)) == 1: 
+                print(f"{player} 'tupled out'! Turn ends with 0 points.")
+                break
