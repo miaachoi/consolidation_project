@@ -15,61 +15,65 @@ def display_scores(players):
         print(f"{player}: {score} points")
 
 # Initialize game variables 
-players = {}
-num_players = int(input("Enter the number of players: "))
-target_score = int(input("Enter the target score to win: "))
+players = {} # Dictionary to store player names and scores
+num_players = int(input("Enter the number of players: ")) # Get number of players
+target_score = int(input("Enter the target score to win: ")) # Get target score to win 
 
 # Add players to the game 
 for i in range(1, num_players + 1):
-    name = input(f"Enter Player {i}'s name: ")
-    players[name] = 0
+    name = input(f"Enter Player {i}'s name: ") # Get each player's name 
+    players[name] = 0 # Initialize each player's score to 0 
 
-winner = None 
+winner = None # Variable to track who the winner is 
 
+# Main game loop 
 while not winner: 
     for player in players: 
-        print(f"\n{player}'s turn!")
-        dice = roll_dice()
-        fixed = set() 
+        print(f"\n{player}'s turn!") # Says whose turn it is 
+        dice = roll_dice() # Roll three dice at the start of the turn 
+        fixed = set() # Set to store "fixed" dice (cannot be rerolled)
 
+        # Check for dice that are fixed (appear two or more times)
         for die in set(dice):
             if dice.count(die) >= 2:
                 fixed.add(die) 
 
         while True: 
-            print(f"Rolled dice: {dice}")
-            print(f"Fixed dice: {list(fixed)}")
+            print(f"Rolled dice: {dice}") # Show the dice roll 
+            print(f"Fixed dice: {list(fixed)}") # Show the fixed dice
 
+            # Check if all dice are the same (player "tupled out")
             if len(set(dice)) == 1: 
                 print(f"{player} 'tupled out'! Turn ends with 0 points.")
                 break
-            # Identify unfixed dice 
-            unfixed_dice = [die for die in dice if die not in fixed]
-            if not unfixed_dice: # No unfixed dice left to reroll
-                print(f"{player} decides to stop. Total points: {sum(dice)}")
-                players[player] += sum(dice) # Add score 
-                break 
 
+            # Identify unfixed dice (the dice not in the fixed set) 
+            unfixed_dice = [die for die in dice if die not in fixed]
+            if not unfixed_dice: # No unfixed dice left to reroll # No unfixed dice left to reroll 
+                print(f"{player} decides to stop. Total points: {sum(dice)}")
+                players[player] += sum(dice) # Add score to player's total 
+                break 
+            # Ask the player if they want to reroll the unfixed dice 
             reroll = input(f"Do you want to reroll unfixed dice ({unfixed_dice})? (y/n): ").lower() 
             
-            if reroll == 'y': # Player wants to reroll
-                # Roll only the unfixed dice 
-                new_roll = roll_dice(len(unfixed_dice))
-                # Combine the fixed dice and new roll 
-                dice = list(fixed) + new_roll
+            if reroll == 'y': # Player decides to reroll 
+                new_roll = roll_dice(len(unfixed_dice))  # Roll only the unfixed dice 
+                dice = list(fixed) + new_roll # Combine fixed dice with new rolls
                 print(f"New roll: {new_roll}")
-        
+                
+                # Update fixed dice if any appear twice in the new roll 
                 for die in set(dice):
                     if dice.count(die) >=2 and die not in fixed: 
                         fixed.add(die)
-            else: 
+            else: # Player decides to stop rolling 
                 print(f"{player} decides to stop. Total points: {sum(dice)}")
-                players[player] += sum(dice) 
+                players[player] += sum(dice) # Add score to player's total 
                 break 
-    
+        # Check if the player has reached or exceeded the target score
         if players[player] >= target_score: 
-            winner = player
+            winner = player # Say who the winner is 
             break 
+    # Display the scores after each round 
     display_scores(players)
+# Declare the winner 
 print(f"\nCongratulations, {winner}! You won with {players[winner]} points!")
-
