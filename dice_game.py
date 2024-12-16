@@ -1,6 +1,9 @@
 import random # Importing random module for generating random dice rolls 
+import time
+import seaborn as sns
+import matplotlib.pyplot as plt 
 
-# Display the game rules 
+# Display the game rules
 print("Welcome to the 'Tuple Out' Dice Game!")
 print("Rules: Get the highest score without 'tupling out'.")
 
@@ -13,6 +16,14 @@ def display_scores(players):
     print("\nCurrent Scores:")
     for player, score in players.items():
         print(f"{player}: {score} points")
+
+def plot_scores(players): 
+    """Plots the current scores of all game players."""
+    sns.barplot(x=list(players.keys()), y=list(players.values()), hue=list(players.keys()), palette="viridis", legend=False)
+    plt.title("Player Scores")
+    plt.xlabel("Players")
+    plt.ylabel("Scores")
+    plt.show()
 
 # Initialize game variables 
 players = {} # Dictionary to store player names and scores
@@ -30,6 +41,8 @@ game_winner = None # Variable to track who the winner is
 while not game_winner: 
     for player in players: 
         print(f"\n{player}'s turn!") # Says whose turn it is 
+        turn_start = time.process_time() # Start the timer for player's turn
+
         dice = roll_dice() # Roll three dice at the start of the turn 
         fixed = set() # Set to store "fixed" dice (cannot be rerolled)
 
@@ -50,7 +63,7 @@ while not game_winner:
             # Identify unfixed dice (the dice not in the fixed set) 
             unfixed_dice = [die for die in dice if die not in fixed]
             
-            # If there are no unfixed dcie left, it means the player has kept all matching dice and chooses no reroll 
+            # Check if the player has no unfixed dice left to reroll 
             if not unfixed_dice: # No unfixed dice left to reroll # No unfixed dice left to reroll 
                 print(f"{player} decides to stop. Total points: {sum(dice)}")
                 players[player] += sum(dice) # Add score to player's total 
@@ -72,12 +85,23 @@ while not game_winner:
                 print(f"{player} decides to stop. Total points: {sum(dice)}") # Player stops and adds up their score 
                 players[player] += sum(dice) # Add points to player's total score
                 break # End the player's turn 
-            
+
+        turn_end = time.process_time() # Stop timing player's turn 
+        print(f"{player}'s turn took {turn_end - turn_start:.2f} seconds.")
+
         # Check if the player has reached or exceeded the target score
         if players[player] >= target_score: 
             game_winner = player # Say who the winner is 
             break 
+
     # Display the scores after each round 
     display_scores(players)
+
+    # Plot the scores
+    plot_scores(players)
+
+    # Add a delay before starting the next round 
+    time.sleep(2)
+
 # Declare the winner 
 print(f"\nCongratulations, {game_winner}! You won with {players[game_winner]} points!")
