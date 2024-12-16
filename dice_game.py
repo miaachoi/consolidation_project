@@ -1,9 +1,9 @@
 import random # Importing random module for generating random dice rolls 
 import pandas as pd # Importing pandas for data tracking 
 import numpy as np # Importing numpy for calculations 
-import time
-import seaborn as sns
-import matplotlib.pyplot as plt 
+import time # Importing time module for timing each player's turn 
+import seaborn as sns # Importing seaborn for data visualization 
+import matplotlib.pyplot as plt # Importing matplotlib for plotting graphs 
 
 players = {} # Dictionary to store player names and scores
 score_data = [] # List to track scores each round, which will be used later for analysis 
@@ -44,7 +44,10 @@ round_num = 1 # Start the round counter
 
 # Main game loop 
 while not game_winner: 
-    print(f"\nRound {round_num}") # Display the current round number
+    """
+    Main game loop where players take turns rolling dice and gaining points until one reaches the target score.
+    """
+    print(f"\nRound {round_num}") # Displays the current round number
 
     for player in players: 
         print(f"\n{player}'s turn!") # Says whose turn it is 
@@ -122,6 +125,10 @@ while not game_winner:
 # Declare the winner 
 print(f"\nCongratulations, {game_winner}! You won with {players[game_winner]} points!")
 
-score_df = pd.DataFrame(score_data) 
-score_df.to_csv("tuple_scores.csv", index=False) # Exports score data to CSV
+score_df = pd.DataFrame(score_data)
+"""
+Converts 'score_data' list, which contains dictionaries of player scores, into pandas DataFrame.
+This format allows for a more flexible handling of the data for analysis and export. 
+"""
+score_df.to_csv("tuple_scores.csv", index=False) # Exports score data to CSV file, without including the index
 print("Game scores saved to 'tuple_scores.csv'.")
