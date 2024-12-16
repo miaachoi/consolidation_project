@@ -1,7 +1,12 @@
 import random # Importing random module for generating random dice rolls 
+import pandas as pd # Importing pandas for data tracking 
+import numpy as np # Importing numpy for calculations 
 import time
 import seaborn as sns
 import matplotlib.pyplot as plt 
+
+players = {} # Dictionary to store player names and scores
+score_data = [] # List to track scores each round, which will be used later for analysis 
 
 # Display the game rules
 print("Welcome to the 'Tuple Out' Dice Game!")
@@ -26,7 +31,6 @@ def plot_scores(players):
     plt.show()
 
 # Initialize game variables 
-players = {} # Dictionary to store player names and scores
 num_players = int(input("Enter the number of players: ")) # Get number of players
 target_score = int(input("Enter the target score to win: ")) # Get target score to win 
 
@@ -36,9 +40,12 @@ for i in range(1, num_players + 1):
     players[name] = 0 # Initialize each player's score to 0 
 
 game_winner = None # Variable to track who the winner is 
+round_num = 1 # Start the round counter
 
 # Main game loop 
 while not game_winner: 
+    print(f"\nRound {round_num}") # Display the current round number
+
     for player in players: 
         print(f"\n{player}'s turn!") # Says whose turn it is 
         turn_start = time.process_time() # Start the timer for player's turn
@@ -68,6 +75,7 @@ while not game_winner:
                 print(f"{player} decides to stop. Total points: {sum(dice)}")
                 players[player] += sum(dice) # Add score to player's total 
                 break 
+
             # Ask the player if they want to reroll the unfixed dice or stop
             reroll = input(f"Do you want to reroll unfixed dice ({unfixed_dice})? (y/n): ").lower() 
             
@@ -89,19 +97,31 @@ while not game_winner:
         turn_end = time.process_time() # Stop timing player's turn 
         print(f"{player}'s turn took {turn_end - turn_start:.2f} seconds.")
 
+        # Tracking score data in a simple list, will be used for analysis later
+        score_data.append({"Player": player, "Round": round_num, "Score": sum(dice)})
+
         # Check if the player has reached or exceeded the target score
         if players[player] >= target_score: 
             game_winner = player # Say who the winner is 
             break 
 
     # Display the scores after each round 
-    display_scores(players)
-
-    # Plot the scores
+    print("Displaying scores...")
+    print("Please close the plot window to continue the game.") # Notify the user"
     plot_scores(players)
+
+    # Calculate average score using NumPy
+    average_score = np.mean([p["Score"] for p in score_data])
+    print(f"Average score after round {round_num}: {average_score:.2f}")
 
     # Add a delay before starting the next round 
     time.sleep(2)
 
+    round_num += 1 # Increment the round counter 
+
 # Declare the winner 
 print(f"\nCongratulations, {game_winner}! You won with {players[game_winner]} points!")
+
+score_df = pd.DataFrame(score_data) 
+score_df.to_csv("tuple_scores.csv", index=False) # Exports score data to CSV
+print("Game scores saved to 'tuple_scores.csv'.")
